@@ -18,6 +18,9 @@ class Server
         // Conectar a base de datos
         this.conectarDB();
 
+        //middlewares
+        this.middlewares();
+
          // Mis rutas
         this.routes();
     }
@@ -31,6 +34,13 @@ class Server
 
     routes() {
         this.app.use( this.usuariosPath, require('../routes/usuario'));
+    }
+
+    middlewares() {
+
+        // Lectura y parseo del body
+        this.app.use( express.json() );
+
     }
 
     listen()
