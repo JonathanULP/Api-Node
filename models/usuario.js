@@ -26,10 +26,10 @@ const UsuarioSchema = Schema({
 });
 
 
-
-/* UsuarioSchema.methods.toJSON = function() {
+//Seeteamos el json que se devuelve cuando se inserta correctamente un usuario
+UsuarioSchema.methods.toJSON = function() {
     const { __v, password, ...usuario  } = this.toObject();
     return usuario;
-} */
+}
 
 module.exports = model( 'Usuario', UsuarioSchema );
