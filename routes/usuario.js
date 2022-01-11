@@ -3,7 +3,10 @@ const { check } = require('express-validator');
 
 
 const { validarCampos } = require('../middlewares/validar-campos');
+const { validarJWT } = require('../middlewares/validar-jwt');
+
 const {  emailExiste,existeUsuarioPorId} = require('../helpers/db-validators');
+
 const { getUsuario,
         postUsuario,
         putUsuario,
@@ -11,9 +14,12 @@ const { getUsuario,
 
 const router = Router();
 
-router.get('/',getUsuario);
+router.get('/',[
+    validarJWT
+],getUsuario);
 
 router.post('/',[
+    validarJWT,
     check('name','El nombre es obligatorio').notEmpty(),
     check('email','El email no es válido').isEmail(),
     check('email').custom(emailExiste),
@@ -22,6 +28,7 @@ router.post('/',[
 ],postUsuario);
 
 router.put('/:id',[
+    validarJWT,
     check('id','El ID no es válido').isMongoId(),
     check('id').custom( existeUsuarioPorId ),
     validarCampos
@@ -29,6 +36,7 @@ router.put('/:id',[
 
 
 router.delete('/:id',[
+    validarJWT,
     check('id','El ID no es válido').isMongoId(),
     check('id').custom( existeUsuarioPorId ),
     validarCampos

@@ -26,8 +26,10 @@ const UsuarioSchema = Schema({
 });
 
 
-//Seeteamos el json que se devuelve cuando se inserta correctamente un usuario
+//Seeteamos el json que se devuelve cuando retornamos un usuario
 UsuarioSchema.methods.toJSON = function() {
+
+    //extraemos el __v,password del json y utilizamos el resto
     const { __v, password, ...usuario  } = this.toObject();
     return usuario;
 }
