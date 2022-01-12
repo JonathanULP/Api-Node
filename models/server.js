@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 const { connectionDB } = require('../database/config');
@@ -14,9 +15,10 @@ class Server
         this.port = process.env.PORT;
         this.connection = process.env.MONGODB;
 
-
-        this.usuariosPath = '/api/usuarios';
         this.authPath = '/api/auth';
+        this.usuariosPath = '/api/usuarios';
+        this.documentosPath = '/api/documentos';
+        
 
         // Conectar a base de datos
         this.conectarDB();
@@ -36,14 +38,24 @@ class Server
 
 
     routes() {
-        this.app.use( this.usuariosPath, require('../routes/usuario'));
+
         this.app.use( this.authPath, require('../routes/auth'));
+        this.app.use( this.usuariosPath, require('../routes/usuario'));
+        this.app.use( this.documentosPath, require('../routes/documento'));
+        
     }
 
     middlewares() {
 
         // Lectura y parseo del body
         this.app.use( express.json() );
+
+        //Configuracion de fileuppload
+        this.app.use( fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }));
 
     }
 
