@@ -16,7 +16,7 @@ const subirArchivo = (files , extensionesInvalidas = ['exec','js','rar','zip','h
             return reject(`La extensión ${ extension } no es permitida`);
         }
 
-        const nameDocument = uuidv4() + '.' + extension;
+        const nameDocument = documento.name;
         const pathDocument = path.join( __dirname, '../uploads/', carpeta, nameDocument );
 
         documento.mv( pathDocument, (err) => {
