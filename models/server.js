@@ -1,6 +1,8 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 require('dotenv').config();
+const cors = require('cors');
+const path = require('path');
 
 const { connectionDB } = require('../database/config');
 
@@ -47,6 +49,8 @@ class Server
 
     middlewares() {
 
+        //CORS
+        this.app.use( cors() );
         // Lectura y parseo del body
         this.app.use( express.json() );
 
@@ -56,6 +60,8 @@ class Server
             tempFileDir : '/tmp/',
             createParentPath: true
         }));
+
+        this.app.use(express.static('public'));
 
     }
 

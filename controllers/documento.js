@@ -1,5 +1,7 @@
 const { response, request } = require("express");
 const { subirArchivo } = require('../helpers/subir-archivo');
+const path = require('path');
+const fs = require('fs');
 
 const Documento = require('../models/documento');
 
@@ -59,6 +61,26 @@ const getDocumentoByUser = async ( req, res = response) => {
 };
 
 
+const getArchivo = async (req, res) => {
+
+    const { id } = req.params;
+
+    const documento = await Documento.findById( id );
+
+    if ( fs.existsSync( documento.pathDocument ) ){
+        res.sendFile( documento.pathDocument );
+    }
+    else {
+
+        res.json({
+            msg: "NO existe"
+        });
+
+    }
+
+}
+
+
 
 const deleteDocument = async ( req , res=response ) => {
 
@@ -77,5 +99,6 @@ const deleteDocument = async ( req , res=response ) => {
 module.exports = {
     cargarArchivo,
     getDocumentoByUser,
-    deleteDocument
+    deleteDocument,
+    getArchivo
 };

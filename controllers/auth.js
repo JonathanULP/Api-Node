@@ -35,11 +35,15 @@ const login = async(req = request,res = response) => {
 
     const token = await generarJWT( usuario.id );
 
-    res.json({
-        usuario,
-        token
-    });
+    res.send(token);
 };
+
+
+const logout = ( req , res ) => {
+
+    
+
+}
 
 
 module.exports = {

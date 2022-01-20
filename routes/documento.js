@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 
-const { cargarArchivo, getDocumentoByUser, deleteDocument } = require('../controllers/documento');
+const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo } = require('../controllers/documento');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
@@ -14,6 +14,12 @@ const router = Router();
 router.get('/',[
     validarJWT
 ],getDocumentoByUser);
+
+
+router.get('/:id',[
+    validarJWT,
+    check('id','El ID no es válido')
+],getArchivo);
 
 
 
