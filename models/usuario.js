@@ -18,19 +18,15 @@ const UsuarioSchema = Schema({
     estado: {
         type: Boolean,
         default: true
-    },
-    google: {
-        type: Boolean,
-        default: false
-    },
+    }
 });
 
 
 //Seeteamos el json que se devuelve cuando retornamos un usuario
 UsuarioSchema.methods.toJSON = function() {
 
-    //extraemos el __v,password del json y utilizamos el resto
-    const { __v, password, ...usuario  } = this.toObject();
+    //extraemos el __v del json y utilizamos el resto
+    const { __v, ...usuario  } = this.toObject();
     return usuario;
 }
 

@@ -7,13 +7,13 @@ const Documento = require('../models/documento');
 
 
 const cargarArchivo = async ( req , res = response ) => {
-
-    const { id } = req.usuario;
-    const id_usuario = id;
-    let { created , description , tag } = req.body;
-    created = Date(created);
    
     try {
+
+        const { id } = req.usuario;
+        const id_usuario = id;
+        let { created , description , tag } = req.body;
+        created = Date(created);
 
         const {pathDocument , nameDocument} = await subirArchivo(req.files,undefined,id_usuario);
 
@@ -39,6 +39,21 @@ const cargarArchivo = async ( req , res = response ) => {
 
 };
 
+const updateArchivo = async ( req ,  res = response  ) => {
+
+    const { id } = req.params;
+
+    const { description , tag , state , favorite , public } = req.body;
+
+    const documento = await Documento.findByIdAndUpdate(id,{description,tag,state,favorite,public},{new:true});
+
+
+    return res.json({
+        documento
+    });
+
+}
+
 
 const getDocumentoByUser = async ( req, res = response) => {
 
@@ -60,10 +75,55 @@ const getDocumentoByUser = async ( req, res = response) => {
     }
 };
 
+const getDocumentPorNombreEtiqueta = async ( req , res = response) => {
+
+    const { _id } = req.usuario;
+    const { filtro } = req.params;
+
+    if ( filtro ) {
+
+        const documentos = await Documento.find({id_usuario:_id , $or:[{nameDocument:{ $regex: '.*' + filtro + '.*' }},{tag : { $regex: '.*' + filtro + '.*'}}]});  
+        res.json({
+            documentos
+        });
+    }
+    else {
+        const documentos = [];
+        res.json({
+            documentos
+        });
+    }
+
+}
+
+const getDocumentosEliminados = async ( req , res ) => {
+
+    const { _id } = req.usuario;
+
+        const documentos = await Documento.find({ id_usuario:_id , state: false });
+        res.json({
+            documentos
+        });
+    
+}
+
+const getDocumentosFavoritos = async ( req , res ) => {
+
+    const { _id } = req.usuario;
+
+        const documentos = await Documento.find({ id_usuario:_id , state: true , favorite: true });
+        res.json({
+            documentos
+        });
+    
+}
+
 
 const getArchivo = async (req, res) => {
 
-    const { id } = req.params;
+    try {
+
+        const { id } = req.params;
 
     const documento = await Documento.findById( id );
 
@@ -73,11 +133,33 @@ const getArchivo = async (req, res) => {
     else {
 
         res.json({
-            msg: "NO existe"
+            msg: "NO existe el archivo solicitado"
         });
 
     }
+        
+    } catch (error) {
 
+        res.status(400).json({
+            msg: "No se encuentra el archivo"
+        })
+        
+    }
+}
+
+    const getDocumentoFull = async (req, res) => {
+    
+        const { id } = req.params;
+    
+        const documento = await Documento.findById({_id:id});
+    
+        if ( fs.existsSync( documento.pathDocument ) ){
+
+           return res.json({
+                documento
+            });
+        }
+      
 }
 
 
@@ -99,6 +181,11 @@ const deleteDocument = async ( req , res=response ) => {
 module.exports = {
     cargarArchivo,
     getDocumentoByUser,
+    getDocumentosEliminados,
     deleteDocument,
-    getArchivo
+    getArchivo,
+    getDocumentPorNombreEtiqueta,
+    getDocumentosFavoritos,
+    updateArchivo,
+    getDocumentoFull
 };

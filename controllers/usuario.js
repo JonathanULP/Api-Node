@@ -53,7 +53,7 @@ const putUsuario = async(req,res) => {
 
     const { id } = req.params;
 
-    const {_id,password,google,email, ...resto} = req.body;
+    const {_id,password,email, ...resto} = req.body;
 
     //verificamos si envia el password y modificamos
     if ( password ) {
@@ -61,9 +61,12 @@ const putUsuario = async(req,res) => {
         const salt = bcryptjs.genSaltSync(12);
         resto.password = bcryptjs.hashSync(password,salt);
 
+        //le asignamos el email
+        resto.email = email;
+
     }
 
-    const usuario = await Usuario.findByIdAndUpdate(id,resto);
+    const usuario = await Usuario.findByIdAndUpdate(id,resto,{new:true});
 
     res.json({ usuario });
 

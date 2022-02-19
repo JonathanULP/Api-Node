@@ -27,6 +27,10 @@ const DocumentoSchema = Schema({
         type: Boolean,
         default: true
     },
+    favorite: {
+        type: Boolean,
+        default: false
+    },
     public: {
         type: Boolean,
         default: false
