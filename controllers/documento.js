@@ -177,6 +177,20 @@ const deleteDocument = async ( req , res=response ) => {
 
 }
 
+const restoreArchivo = async( req , res = response) => {
+    
+   const { id } = req.params;
+
+   const documento = await Documento.findByIdAndUpdate(id,{state: true});
+
+   res.json({
+       documento
+   });
+
+};
+
+
+
 
 module.exports = {
     cargarArchivo,
@@ -187,5 +201,6 @@ module.exports = {
     getDocumentPorNombreEtiqueta,
     getDocumentosFavoritos,
     updateArchivo,
-    getDocumentoFull
+    getDocumentoFull,
+    restoreArchivo
 };

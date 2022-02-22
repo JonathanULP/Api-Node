@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull} = require('../controllers/documento');
+    
+const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull , restoreArchivo} = require('../controllers/documento');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
@@ -30,12 +31,16 @@ router.get('/favoritos',[
     validarJWT
 ],getDocumentosFavoritos);
 
-
-
 router.get('/:id',[
     validarJWT,
     check('id','El ID no es válido')
 ],getArchivo);
+
+router.get('/restore/:id',[
+    validarJWT,
+    check('id','El ID no es válido').isMongoId(),
+    validarCampos
+],restoreArchivo);
 
 
 
@@ -49,7 +54,7 @@ router.post('/',[
 
 router.put('/:id',[
     validarJWT,
-    check('id','El Id no es válido').isMongoId(),
+    check('id','El ID no es válido').isMongoId(),
     validarCampos
 ],updateArchivo);
 
