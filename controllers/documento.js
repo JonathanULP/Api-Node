@@ -15,6 +15,7 @@ const cargarArchivo = async ( req , res = response ) => {
         let { created , description , tag } = req.body;
         created = Date(created);
 
+
         const {pathDocument , nameDocument} = await subirArchivo(req.files,undefined,id_usuario);
 
         const documento = new Documento({ nameDocument , created , pathDocument , description , tag , id_usuario });
@@ -190,6 +191,16 @@ const restoreArchivo = async( req , res = response) => {
 };
 
 
+const getDocumentosPublicos = async( req , res = response) => {
+
+    const documentos = await Documento.find({state:true , public: true});
+
+    res.json({
+        documentos
+    });
+}
+
+
 
 
 module.exports = {
@@ -202,5 +213,6 @@ module.exports = {
     getDocumentosFavoritos,
     updateArchivo,
     getDocumentoFull,
-    restoreArchivo
+    restoreArchivo,
+    getDocumentosPublicos
 };

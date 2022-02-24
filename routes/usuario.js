@@ -30,6 +30,8 @@ router.post('/',[
 router.put('/:id',[
     validarJWT,
     check('id','El ID no es válido').isMongoId(),
+    check('name','El nombre es obligatorio').notEmpty(),
+    check('email','El email no es válido').isEmail(),
     check('id').custom( existeUsuarioPorId ),
     validarCampos
 ],putUsuario);

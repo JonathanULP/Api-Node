@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
     
-const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull , restoreArchivo} = require('../controllers/documento');
+const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull , restoreArchivo , getDocumentosPublicos} = require('../controllers/documento');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
@@ -31,6 +31,10 @@ router.get('/favoritos',[
     validarJWT
 ],getDocumentosFavoritos);
 
+router.get('/publicos',[
+    validarJWT
+],getDocumentosPublicos);
+
 router.get('/:id',[
     validarJWT,
     check('id','El ID no es válido')
@@ -43,13 +47,14 @@ router.get('/restore/:id',[
 ],restoreArchivo);
 
 
-
-router.post('/',[
-    validarJWT,
+/* ,
     check('created','La fecha no es correcta').isDate({format: 'DD-MM-YYYY'}),
     check('description','La descripcion es obligatoria').notEmpty(),
     check('tag','La etiqueta debe ser una cadena de caracteres').isString(),
-    validarCampos
+    validarCampos */
+
+router.post('/',[
+    validarJWT
 ],cargarArchivo);
 
 router.put('/:id',[
