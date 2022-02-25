@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
     
-const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull , restoreArchivo , getDocumentosPublicos} = require('../controllers/documento');
+const { cargarArchivo, getDocumentoByUser, deleteDocument, getArchivo, getDocumentosEliminados, getDocumentPorNombreEtiqueta , getDocumentosFavoritos , updateArchivo , getDocumentoFull , restoreArchivo , getDocumentosPublicos , deleteDocumentoFisico , descargarArchivo } = require('../controllers/documento');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
@@ -46,15 +46,16 @@ router.get('/restore/:id',[
     validarCampos
 ],restoreArchivo);
 
-
-/* ,
-    check('created','La fecha no es correcta').isDate({format: 'DD-MM-YYYY'}),
-    check('description','La descripcion es obligatoria').notEmpty(),
-    check('tag','La etiqueta debe ser una cadena de caracteres').isString(),
-    validarCampos */
+router.get('/download/:id',[
+    validarJWT
+],descargarArchivo);
 
 router.post('/',[
-    validarJWT
+    validarJWT,
+    check('created','La fecha no es correcta').isDate(),
+    check('description','La descripcion es obligatoria').notEmpty(),
+    check('tag','La etiqueta debe ser una cadena de caracteres').isString(),
+    validarCampos
 ],cargarArchivo);
 
 router.put('/:id',[
@@ -69,6 +70,12 @@ router.delete('/:id',[
     check('id','El ID no es válido').isMongoId(),
     validarCampos
 ],deleteDocument);
+
+router.delete('/fisicamente/:id',[
+    validarJWT,
+    check('id','El ID no es válido').isMongoId(),
+    validarCampos
+],deleteDocumentoFisico)
 
  
 module.exports = router;

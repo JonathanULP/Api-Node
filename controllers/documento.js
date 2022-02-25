@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const Documento = require('../models/documento');
+const User = require('../models/usuario');
 
 
 const cargarArchivo = async ( req , res = response ) => {
@@ -126,10 +127,40 @@ const getArchivo = async (req, res) => {
 
         const { id } = req.params;
 
-    const documento = await Documento.findById( id );
+        const documento = await Documento.findById( id );
 
     if ( fs.existsSync( documento.pathDocument ) ){
         res.sendFile( documento.pathDocument );
+    }
+    else {
+
+        res.json({
+            msg: "NO existe el archivo solicitado"
+        });
+
+    }
+        
+    } catch (error) {
+
+        res.status(400).json({
+            msg: "No se encuentra el archivo"
+        })
+        
+    }
+}
+
+const descargarArchivo = async (req, res = response) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const documento = await Documento.findById( id );
+
+    if ( fs.existsSync( documento.pathDocument ) ){
+        const file = path.resolve(documento.pathDocument);
+
+        res.download(file);
     }
     else {
 
@@ -200,6 +231,26 @@ const getDocumentosPublicos = async( req , res = response) => {
     });
 }
 
+const deleteDocumentoFisico = async( req , res = response) => {
+
+    const { id } = req.params;
+
+    const documento = await Documento.findById(id);
+
+    if( fs.existsSync(documento.pathDocument) ) {
+
+        fs.unlinkSync(documento.pathDocument);
+        await Documento.findByIdAndDelete(id);
+
+        res.status(200).json({
+            msg: 'Documento eliminado'
+        })
+
+    }
+
+
+}
+
 
 
 
@@ -214,5 +265,7 @@ module.exports = {
     updateArchivo,
     getDocumentoFull,
     restoreArchivo,
-    getDocumentosPublicos
+    getDocumentosPublicos,
+    deleteDocumentoFisico,
+    descargarArchivo
 };
