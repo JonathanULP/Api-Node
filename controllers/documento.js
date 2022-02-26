@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 
 const Documento = require('../models/documento');
-const User = require('../models/usuario');
 
 
 const cargarArchivo = async ( req , res = response ) => {
