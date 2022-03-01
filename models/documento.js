@@ -39,6 +39,7 @@ const DocumentoSchema = Schema({
         type: String,
         require: [true, 'El usuario es obligatorio']
     }
+    
 });
 
 

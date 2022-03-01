@@ -19,7 +19,6 @@ router.get('/',[
 ],getUsuario);
 
 router.post('/',[
-    validarJWT,
     check('name','El nombre es obligatorio').notEmpty(),
     check('email','El email no es válido').isEmail(),
     check('email').custom(emailExiste),
@@ -32,6 +31,7 @@ router.put('/:id',[
     check('id','El ID no es válido').isMongoId(),
     check('name','El nombre es obligatorio').notEmpty(),
     check('email','El email no es válido').isEmail(),
+    check('password','La contraseña debe tener 6 digitos minimo').isLength({min:6}),
     check('id').custom( existeUsuarioPorId ),
     validarCampos
 ],putUsuario);

@@ -21,7 +21,6 @@ const cargarArchivo = async ( req , res = response ) => {
         const documento = new Documento({ nameDocument , created , pathDocument , description , tag , id_usuario });
         documento.save();
 
-
         res.json({
             msg :"Carga de archivos",
             pathDocument,
@@ -62,14 +61,14 @@ const getDocumentoByUser = async ( req, res = response) => {
     const { etiqueta } = req.query;
 
     if ( etiqueta ) {
-        const documentos = await Documento.find({ id_usuario:_id , state: true , tag: etiqueta });
+        const documentos = await Documento.find({id_usuario: _id, state: true , tag: etiqueta });
         res.json({
             documentos
         });
         
     } 
     else {
-        const documentos = await Documento.find({ id_usuario:_id , state: true });
+        const documentos = await Documento.find({ id_usuario: _id , state: true });
         res.json({
             documentos
         });
@@ -83,7 +82,7 @@ const getDocumentPorNombreEtiqueta = async ( req , res = response) => {
 
     if ( filtro ) {
 
-        const documentos = await Documento.find({id_usuario:_id , $or:[{nameDocument:{ $regex: '.*' + filtro + '.*' }},{tag : { $regex: '.*' + filtro + '.*'}}]});  
+        const documentos = await Documento.find({id_usuario:_id , $or:[{nameDocument:{ $regex: '.*' + filtro + '.*' }},{tag : { $regex: '.*' + filtro + '.*'}}],state: true});  
         res.json({
             documentos
         });
