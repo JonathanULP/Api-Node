@@ -2,6 +2,7 @@ const { response, request } = require("express");
 const { subirArchivo } = require('../helpers/subir-archivo');
 const path = require('path');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const Documento = require('../models/documento');
 
@@ -14,7 +15,6 @@ const cargarArchivo = async ( req , res = response ) => {
         const id_usuario = id;
         let { created , description , tag } = req.body;
         created = Date(created);
-
 
         const {pathDocument , nameDocument} = await subirArchivo(req.files,undefined,id_usuario);
 
@@ -72,6 +72,7 @@ const getDocumentoByUser = async ( req, res = response) => {
         res.json({
             documentos
         });
+
     }
 };
 
